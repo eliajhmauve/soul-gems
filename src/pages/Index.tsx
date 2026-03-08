@@ -16,6 +16,9 @@ const templates: { key: TemplateStyle; label: string }[] = [
   { key: 'classic', label: '經典' },
   { key: 'modern', label: '現代' },
   { key: 'minimal', label: '極簡' },
+  { key: 'ink', label: '水墨' },
+  { key: 'starry', label: '星空' },
+  { key: 'floral', label: '花卉' },
 ];
 
 const Index = () => {
