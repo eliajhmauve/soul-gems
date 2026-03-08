@@ -72,6 +72,7 @@ const Index = () => {
     const newCount = drawCount + 1;
     setDrawCount(newCount);
     // Brief flip-out then flip-in
+    playFlipSound();
     setFlipKey(prev => prev + 1);
     setTimeout(() => {
       const q = generateQuote(mood, name, newCount);
