@@ -249,21 +249,23 @@ const Index = () => {
       {/* Step: Result */}
       {step === 'result' && mood && (
         <div className="w-full flex flex-col items-center space-y-4 sm:space-y-6">
-          {/* Template switcher */}
-          <div className="flex gap-1.5 sm:gap-2 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-            {templates.map(t => (
-              <button
-                key={t.key}
-                onClick={() => setTemplate(t.key)}
-                className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-serif-tc transition-all active:scale-95 ${
-                  template === t.key
-                    ? 'bg-primary text-primary-foreground shadow-md'
-                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
+          {/* Template switcher — horizontally scrollable */}
+          <div className="w-full overflow-x-auto scrollbar-hide animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+            <div className="flex gap-1.5 sm:gap-2 px-4 sm:px-0 sm:justify-center w-max sm:w-full mx-auto">
+              {templates.map(t => (
+                <button
+                  key={t.key}
+                  onClick={() => setTemplate(t.key)}
+                  className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-serif-tc transition-all active:scale-95 whitespace-nowrap shrink-0 ${
+                    template === t.key
+                      ? 'bg-primary text-primary-foreground shadow-md'
+                      : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Card with flip animation */}
