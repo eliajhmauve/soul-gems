@@ -49,6 +49,7 @@ const Index = () => {
   }, [today]);
 
   const handleMoodSelect = (m: MoodKey) => {
+    playSoftClick();
     setMood(m);
     setStep('name');
   };
