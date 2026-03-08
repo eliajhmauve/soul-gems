@@ -120,6 +120,7 @@ const Index = () => {
     if (isFavorited) {
       setFavorites(prev => prev.filter(f => !(f.quote === quote && f.mood === mood)));
     } else {
+      playSparkleSound();
       setFavorites(prev => [...prev, { quote, mood, name, date: today }]);
     }
   };
