@@ -60,6 +60,7 @@ const Index = () => {
     setQuote(q);
     // Show revealing ceremony first
     setStep('revealing');
+    playRevealSound();
     setTimeout(() => {
       setFlipKey(prev => prev + 1);
       setStep('result');
