@@ -4,6 +4,7 @@ import MoodSelector from "@/components/MoodSelector";
 import QuoteCard, { type TemplateStyle } from "@/components/QuoteCard";
 import { type MoodKey, getQuoteForMoodAndSeed, generateSeed, moods } from "@/data/quotes";
 import { Heart, Download, RefreshCw, Share2, BookmarkPlus, Bookmark, Sparkles } from "lucide-react";
+import { playRevealSound, playFlipSound, playSparkleSound, playSoftClick } from "@/lib/sounds";
 
 interface SavedQuote {
   quote: string;
@@ -48,6 +49,7 @@ const Index = () => {
   }, [today]);
 
   const handleMoodSelect = (m: MoodKey) => {
+    playSoftClick();
     setMood(m);
     setStep('name');
   };
@@ -58,6 +60,7 @@ const Index = () => {
     setQuote(q);
     // Show revealing ceremony first
     setStep('revealing');
+    playRevealSound();
     setTimeout(() => {
       setFlipKey(prev => prev + 1);
       setStep('result');
@@ -69,6 +72,7 @@ const Index = () => {
     const newCount = drawCount + 1;
     setDrawCount(newCount);
     // Brief flip-out then flip-in
+    playFlipSound();
     setFlipKey(prev => prev + 1);
     setTimeout(() => {
       const q = generateQuote(mood, name, newCount);
@@ -116,6 +120,7 @@ const Index = () => {
     if (isFavorited) {
       setFavorites(prev => prev.filter(f => !(f.quote === quote && f.mood === mood)));
     } else {
+      playSparkleSound();
       setFavorites(prev => [...prev, { quote, mood, name, date: today }]);
     }
   };
