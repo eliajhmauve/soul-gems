@@ -4,6 +4,7 @@ import MoodSelector from "@/components/MoodSelector";
 import QuoteCard, { type TemplateStyle } from "@/components/QuoteCard";
 import { type MoodKey, getQuoteForMoodAndSeed, generateSeed, moods } from "@/data/quotes";
 import { Heart, Download, RefreshCw, Share2, BookmarkPlus, Bookmark, Sparkles } from "lucide-react";
+import { playRevealSound, playFlipSound, playSparkleSound, playSoftClick } from "@/lib/sounds";
 
 interface SavedQuote {
   quote: string;
