@@ -3,7 +3,7 @@ import { toPng } from "html-to-image";
 import MoodSelector from "@/components/MoodSelector";
 import QuoteCard, { type TemplateStyle } from "@/components/QuoteCard";
 import { type MoodKey, getQuoteForMoodAndSeed, generateSeed, moods } from "@/data/quotes";
-import { Heart, Download, RefreshCw, Share2, BookmarkPlus, Bookmark } from "lucide-react";
+import { Heart, Download, RefreshCw, Share2, BookmarkPlus, Bookmark, Sparkles } from "lucide-react";
 
 interface SavedQuote {
   quote: string;
@@ -19,12 +19,13 @@ const templates: { key: TemplateStyle; label: string }[] = [
 ];
 
 const Index = () => {
-  const [step, setStep] = useState<'mood' | 'name' | 'result'>('mood');
+  const [step, setStep] = useState<'mood' | 'name' | 'revealing' | 'result'>('mood');
   const [mood, setMood] = useState<MoodKey | undefined>();
   const [name, setName] = useState('');
   const [quote, setQuote] = useState('');
   const [template, setTemplate] = useState<TemplateStyle>('classic');
   const [drawCount, setDrawCount] = useState(0);
+  const [flipKey, setFlipKey] = useState(0);
   const [favorites, setFavorites] = useState<SavedQuote[]>(() => {
     try { return JSON.parse(localStorage.getItem('quote-favorites') || '[]'); } catch { return []; }
   });
@@ -52,15 +53,25 @@ const Index = () => {
     if (!mood) return;
     const q = generateQuote(mood, name, drawCount);
     setQuote(q);
-    setStep('result');
+    // Show revealing ceremony first
+    setStep('revealing');
+    setTimeout(() => {
+      setFlipKey(prev => prev + 1);
+      setStep('result');
+    }, 1800);
   };
 
   const handleDrawAnother = () => {
     if (!mood) return;
     const newCount = drawCount + 1;
     setDrawCount(newCount);
-    const q = generateQuote(mood, name, newCount);
-    setQuote(q);
+    // Brief flip-out then flip-in
+    setFlipKey(prev => prev + 1);
+    setTimeout(() => {
+      const q = generateQuote(mood, name, newCount);
+      setQuote(q);
+      setFlipKey(prev => prev + 1);
+    }, 400);
   };
 
   const handleDownload = async (storyMode: boolean = false) => {
@@ -136,7 +147,7 @@ const Index = () => {
           {favorites.map((f, i) => {
             const moodInfo = moods.find(m => m.key === f.mood)!;
             return (
-              <div key={i} className="bg-card border border-border rounded-xl p-3 sm:p-4 flex items-start gap-2.5 sm:gap-3">
+              <div key={i} className="bg-card border border-border rounded-xl p-3 sm:p-4 flex items-start gap-2.5 sm:gap-3 animate-fade-in-up" style={{ animationDelay: `${i * 60}ms` }}>
                 <span className="text-xl sm:text-2xl">{moodInfo.emoji}</span>
                 <div className="flex-1 min-w-0">
                   <p className="font-display text-xs sm:text-sm leading-relaxed text-foreground">「{f.quote}」</p>
@@ -156,25 +167,26 @@ const Index = () => {
 
       {/* Step: Mood */}
       {step === 'mood' && (
-        <div className="animate-fade-in w-full max-w-sm sm:max-w-md">
-          <h2 className="text-center font-serif-tc text-base sm:text-lg text-foreground mb-4 sm:mb-6">你現在的心情是？</h2>
+        <div className="w-full max-w-sm sm:max-w-md">
+          <h2 className="text-center font-serif-tc text-base sm:text-lg text-foreground mb-4 sm:mb-6 animate-fade-in">你現在的心情是？</h2>
           <MoodSelector onSelect={handleMoodSelect} selected={mood} />
         </div>
       )}
 
       {/* Step: Name */}
       {step === 'name' && mood && (
-        <div className="animate-fade-in w-full max-w-sm sm:max-w-md text-center space-y-5 sm:space-y-6">
-          <div className="text-4xl sm:text-5xl">{moods.find(m => m.key === mood)?.emoji}</div>
-          <h2 className="font-serif-tc text-base sm:text-lg text-foreground">輸入你的名字（選填）</h2>
+        <div className="w-full max-w-sm sm:max-w-md text-center space-y-5 sm:space-y-6">
+          <div className="text-4xl sm:text-5xl animate-bounce-in">{moods.find(m => m.key === mood)?.emoji}</div>
+          <h2 className="font-serif-tc text-base sm:text-lg text-foreground animate-fade-in-up" style={{ animationDelay: '150ms' }}>輸入你的名字（選填）</h2>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="你的名字"
-            className="w-full max-w-[240px] sm:max-w-xs mx-auto block bg-card border border-border rounded-xl px-4 py-2.5 sm:py-3 text-center font-serif-tc text-sm sm:text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+            className="w-full max-w-[240px] sm:max-w-xs mx-auto block bg-card border border-border rounded-xl px-4 py-2.5 sm:py-3 text-center font-serif-tc text-sm sm:text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all animate-fade-in-up"
+            style={{ animationDelay: '250ms' }}
           />
-          <div className="flex gap-3 justify-center">
+          <div className="flex gap-3 justify-center animate-fade-in-up" style={{ animationDelay: '350ms' }}>
             <button
               onClick={() => setStep('mood')}
               className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl border border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-all font-serif-tc text-xs sm:text-sm active:scale-95"
@@ -183,19 +195,59 @@ const Index = () => {
             </button>
             <button
               onClick={handleGenerate}
-              className="px-6 sm:px-8 py-2 sm:py-2.5 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition-all font-serif-tc text-xs sm:text-sm shadow-lg active:scale-95"
+              className="px-6 sm:px-8 py-2 sm:py-2.5 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition-all font-serif-tc text-xs sm:text-sm shadow-lg active:scale-95 group"
             >
-              抽取金句 ✨
+              <span className="flex items-center gap-1.5">
+                抽取金句
+                <Sparkles className="w-3.5 h-3.5 group-hover:animate-sparkle" />
+              </span>
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Step: Revealing Ceremony */}
+      {step === 'revealing' && mood && (
+        <div className="w-full flex flex-col items-center justify-center py-12 sm:py-20 space-y-6">
+          <div className="text-5xl sm:text-6xl animate-float">{moods.find(m => m.key === mood)?.emoji}</div>
+          <div className="text-center space-y-3">
+            <p className="font-display text-xl sm:text-2xl text-foreground animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+              正在為{name ? ` ${name} ` : '你'}尋找金句...
+            </p>
+            <div className="flex justify-center gap-1.5 animate-fade-in-up" style={{ animationDelay: '600ms' }}>
+              {[0, 1, 2].map(i => (
+                <span
+                  key={i}
+                  className="w-2 h-2 rounded-full bg-primary/60 animate-bounce-in"
+                  style={{ animationDelay: `${800 + i * 200}ms`, animationDuration: '0.6s' }}
+                />
+              ))}
+            </div>
+          </div>
+          {/* Decorative sparkles */}
+          <div className="relative w-24 h-24">
+            {[0, 1, 2, 3].map(i => (
+              <Sparkles
+                key={i}
+                className="absolute text-primary/40 animate-sparkle"
+                style={{
+                  width: '16px',
+                  height: '16px',
+                  top: `${[10, 60, 20, 70][i]}%`,
+                  left: `${[20, 70, 80, 30][i]}%`,
+                  animationDelay: `${i * 0.4}s`,
+                }}
+              />
+            ))}
           </div>
         </div>
       )}
 
       {/* Step: Result */}
       {step === 'result' && mood && (
-        <div className="animate-scale-in w-full flex flex-col items-center space-y-4 sm:space-y-6">
+        <div className="w-full flex flex-col items-center space-y-4 sm:space-y-6">
           {/* Template switcher */}
-          <div className="flex gap-1.5 sm:gap-2">
+          <div className="flex gap-1.5 sm:gap-2 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
             {templates.map(t => (
               <button
                 key={t.key}
@@ -211,16 +263,18 @@ const Index = () => {
             ))}
           </div>
 
-          {/* Card */}
-          <div className="w-full flex justify-center px-2">
-            <QuoteCard
-              ref={cardRef}
-              quote={quote}
-              mood={mood}
-              name={name}
-              date={today}
-              template={template}
-            />
+          {/* Card with flip animation */}
+          <div className="w-full flex justify-center px-2" key={flipKey} style={{ perspective: '1000px' }}>
+            <div className="animate-flip-in">
+              <QuoteCard
+                ref={cardRef}
+                quote={quote}
+                mood={mood}
+                name={name}
+                date={today}
+                template={template}
+              />
+            </div>
           </div>
 
           {/* Hidden story card for download */}
@@ -237,12 +291,12 @@ const Index = () => {
           </div>
 
           {/* Actions */}
-          <div className="flex flex-wrap gap-2 sm:gap-3 justify-center px-2">
+          <div className="flex flex-wrap gap-2 sm:gap-3 justify-center px-2 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
             <button
               onClick={handleDrawAnother}
-              className="flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-all font-serif-tc text-xs sm:text-sm active:scale-95"
+              className="flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-all font-serif-tc text-xs sm:text-sm active:scale-95 group"
             >
-              <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> 再抽一句
+              <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:rotate-180 transition-transform duration-500" /> 再抽一句
             </button>
             <button
               onClick={toggleFavorite}
@@ -279,7 +333,8 @@ const Index = () => {
 
           <button
             onClick={handleReset}
-            className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors font-serif-tc mt-2 sm:mt-4 active:scale-95"
+            className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors font-serif-tc mt-2 sm:mt-4 active:scale-95 animate-fade-in-up"
+            style={{ animationDelay: '500ms' }}
           >
             重新選擇心情
           </button>
