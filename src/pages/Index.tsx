@@ -115,38 +115,38 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center px-4 py-8">
+    <div className="min-h-screen bg-background flex flex-col items-center px-3 sm:px-4 py-6 sm:py-8">
       {/* Header */}
-      <header className="text-center mb-8 animate-fade-in">
-        <h1 className="font-display text-4xl md:text-5xl text-foreground mb-2">📖 你的專屬人生金句</h1>
-        <p className="text-muted-foreground font-serif-tc text-base">選擇心情，收穫一句專屬於你的智慧</p>
+      <header className="text-center mb-5 sm:mb-8 animate-fade-in">
+        <h1 className="font-display text-3xl sm:text-4xl md:text-5xl text-foreground mb-1.5 sm:mb-2">📖 你的專屬人生金句</h1>
+        <p className="text-muted-foreground font-serif-tc text-sm sm:text-base">選擇心情，收穫一句專屬於你的智慧</p>
       </header>
 
       {/* Favorites toggle */}
       <button
         onClick={() => setShowFavorites(!showFavorites)}
-        className="mb-6 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors font-serif-tc"
+        className="mb-4 sm:mb-6 flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors font-serif-tc active:scale-95"
       >
-        <Heart className="w-4 h-4" />
+        <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         我的收藏 ({favorites.length})
       </button>
 
       {showFavorites && favorites.length > 0 && (
-        <div className="w-full max-w-md mb-8 space-y-3 animate-fade-in">
+        <div className="w-full max-w-sm sm:max-w-md mb-6 sm:mb-8 space-y-2.5 sm:space-y-3 animate-fade-in px-1">
           {favorites.map((f, i) => {
             const moodInfo = moods.find(m => m.key === f.mood)!;
             return (
-              <div key={i} className="bg-card border border-border rounded-xl p-4 flex items-start gap-3">
-                <span className="text-2xl">{moodInfo.emoji}</span>
-                <div className="flex-1">
-                  <p className="font-display text-sm leading-relaxed text-foreground">「{f.quote}」</p>
-                  <p className="text-xs text-muted-foreground mt-1 font-serif-tc">{f.date}{f.name ? ` · ${f.name}` : ''}</p>
+              <div key={i} className="bg-card border border-border rounded-xl p-3 sm:p-4 flex items-start gap-2.5 sm:gap-3">
+                <span className="text-xl sm:text-2xl">{moodInfo.emoji}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="font-display text-xs sm:text-sm leading-relaxed text-foreground">「{f.quote}」</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 font-serif-tc">{f.date}{f.name ? ` · ${f.name}` : ''}</p>
                 </div>
                 <button
                   onClick={() => setFavorites(prev => prev.filter((_, j) => j !== i))}
-                  className="text-muted-foreground hover:text-destructive transition-colors"
+                  className="text-muted-foreground hover:text-destructive transition-colors shrink-0"
                 >
-                  <Bookmark className="w-4 h-4 fill-current" />
+                  <Bookmark className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
                 </button>
               </div>
             );
@@ -156,34 +156,34 @@ const Index = () => {
 
       {/* Step: Mood */}
       {step === 'mood' && (
-        <div className="animate-fade-in w-full max-w-md">
-          <h2 className="text-center font-serif-tc text-lg text-foreground mb-6">你現在的心情是？</h2>
+        <div className="animate-fade-in w-full max-w-sm sm:max-w-md">
+          <h2 className="text-center font-serif-tc text-base sm:text-lg text-foreground mb-4 sm:mb-6">你現在的心情是？</h2>
           <MoodSelector onSelect={handleMoodSelect} selected={mood} />
         </div>
       )}
 
       {/* Step: Name */}
       {step === 'name' && mood && (
-        <div className="animate-fade-in w-full max-w-md text-center space-y-6">
-          <div className="text-5xl mb-2">{moods.find(m => m.key === mood)?.emoji}</div>
-          <h2 className="font-serif-tc text-lg text-foreground">輸入你的名字（選填）</h2>
+        <div className="animate-fade-in w-full max-w-sm sm:max-w-md text-center space-y-5 sm:space-y-6">
+          <div className="text-4xl sm:text-5xl">{moods.find(m => m.key === mood)?.emoji}</div>
+          <h2 className="font-serif-tc text-base sm:text-lg text-foreground">輸入你的名字（選填）</h2>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="你的名字"
-            className="w-full max-w-xs mx-auto block bg-card border border-border rounded-xl px-4 py-3 text-center font-serif-tc text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+            className="w-full max-w-[240px] sm:max-w-xs mx-auto block bg-card border border-border rounded-xl px-4 py-2.5 sm:py-3 text-center font-serif-tc text-sm sm:text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
           />
           <div className="flex gap-3 justify-center">
             <button
               onClick={() => setStep('mood')}
-              className="px-5 py-2.5 rounded-xl border border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-all font-serif-tc text-sm"
+              className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl border border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-all font-serif-tc text-xs sm:text-sm active:scale-95"
             >
               返回
             </button>
             <button
               onClick={handleGenerate}
-              className="px-8 py-2.5 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition-all font-serif-tc text-sm shadow-lg"
+              className="px-6 sm:px-8 py-2 sm:py-2.5 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition-all font-serif-tc text-xs sm:text-sm shadow-lg active:scale-95"
             >
               抽取金句 ✨
             </button>
@@ -193,14 +193,14 @@ const Index = () => {
 
       {/* Step: Result */}
       {step === 'result' && mood && (
-        <div className="animate-scale-in w-full flex flex-col items-center space-y-6">
+        <div className="animate-scale-in w-full flex flex-col items-center space-y-4 sm:space-y-6">
           {/* Template switcher */}
-          <div className="flex gap-2">
+          <div className="flex gap-1.5 sm:gap-2">
             {templates.map(t => (
               <button
                 key={t.key}
                 onClick={() => setTemplate(t.key)}
-                className={`px-4 py-1.5 rounded-full text-sm font-serif-tc transition-all ${
+                className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-serif-tc transition-all active:scale-95 ${
                   template === t.key
                     ? 'bg-primary text-primary-foreground shadow-md'
                     : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
@@ -212,14 +212,16 @@ const Index = () => {
           </div>
 
           {/* Card */}
-          <QuoteCard
-            ref={cardRef}
-            quote={quote}
-            mood={mood}
-            name={name}
-            date={today}
-            template={template}
-          />
+          <div className="w-full flex justify-center px-2">
+            <QuoteCard
+              ref={cardRef}
+              quote={quote}
+              mood={mood}
+              name={name}
+              date={today}
+              template={template}
+            />
+          </div>
 
           {/* Hidden story card for download */}
           <div className="fixed -left-[9999px] top-0">
@@ -235,49 +237,49 @@ const Index = () => {
           </div>
 
           {/* Actions */}
-          <div className="flex flex-wrap gap-3 justify-center">
+          <div className="flex flex-wrap gap-2 sm:gap-3 justify-center px-2">
             <button
               onClick={handleDrawAnother}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-all font-serif-tc text-sm"
+              className="flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-all font-serif-tc text-xs sm:text-sm active:scale-95"
             >
-              <RefreshCw className="w-4 h-4" /> 再抽一句
+              <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> 再抽一句
             </button>
             <button
               onClick={toggleFavorite}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl transition-all font-serif-tc text-sm ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl transition-all font-serif-tc text-xs sm:text-sm active:scale-95 ${
                 isFavorited
                   ? 'bg-accent text-accent-foreground'
                   : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
               }`}
             >
-              {isFavorited ? <Bookmark className="w-4 h-4 fill-current" /> : <BookmarkPlus className="w-4 h-4" />}
+              {isFavorited ? <Bookmark className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" /> : <BookmarkPlus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
               {isFavorited ? '已收藏' : '收藏'}
             </button>
             <button
               onClick={() => handleDownload(false)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-all font-serif-tc text-sm"
+              className="flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-all font-serif-tc text-xs sm:text-sm active:scale-95"
             >
-              <Download className="w-4 h-4" /> 下載
+              <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> 下載
             </button>
             <button
               onClick={() => handleDownload(true)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-all font-serif-tc text-sm"
+              className="flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-all font-serif-tc text-xs sm:text-sm active:scale-95"
             >
-              <Download className="w-4 h-4" /> IG 限動
+              <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> IG 限動
             </button>
             {typeof navigator.share === 'function' && (
               <button
                 onClick={handleShare}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition-all font-serif-tc text-sm shadow-md"
+                className="flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition-all font-serif-tc text-xs sm:text-sm shadow-md active:scale-95"
               >
-                <Share2 className="w-4 h-4" /> 分享
+                <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> 分享
               </button>
             )}
           </div>
 
           <button
             onClick={handleReset}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors font-serif-tc mt-4"
+            className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors font-serif-tc mt-2 sm:mt-4 active:scale-95"
           >
             重新選擇心情
           </button>
