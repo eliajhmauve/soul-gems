@@ -4,8 +4,8 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
-export default defineConfig(({
-  base: '/soul-gems/', mode }) => ({
+export default defineConfig(({ mode }) => ({
+  base: '/soul-gems/',
   server: {
     host: "::",
     port: 8080,
